@@ -6,10 +6,7 @@ var Version = "v1.0"
 var configVersion = "v1.0"
 //声明日志输出内容
 let DefaultLang = {
-	"Get_Money": "§2击杀奖励§6{num}§2{money_name}",
 	"Lang_Error": "读取语言文件出错！",
-	"Cannot_Get_Money": "§b您在§e1小时§b内无法再从此生物中获取{money_name}!",
-	"Debug_Killed": "§b[SADCHunter]您杀死了§e{mob_name}",
 	"Config_Error": "您的config.json配置异常，已重置",
 	"Config_Error_2": "您的mobs.json配置异常，已重置",
 	"Update_config": "检测到配置文件非{configVersion}的版本，已重置配置项",
@@ -17,17 +14,16 @@ let DefaultLang = {
 	"Get_NewVersion_Error": "获取最新版本异常",
 	"UpdatePlugin_Successful": "自动更新成功",
 	"UpdatePlugin_Error": "自动更新异常",
-	"DegbugCommandText": "获取杀死怪物的标准类型名",
-	"Debug_Open": "§b[SADCHunter]您打开了此功能",
-	"Debug_Close": "§b[SADCHunter]您关闭了此功能",
-	"Debug_Help": "§b[SADCHunter]提示\n/getmobid true-打开获取怪物类型名功能\n/getmobid false-关闭获取怪物类型名功能"
+	"Debug_Open": "§b[SADCSign]您打开了此功能",
+	"Debug_Close": "§b[SADCSign]您关闭了此功能",
 }
 //配置文件目录生成
 function read() {
 	let r = file.createDir('plugins/SADCSign')
 	//配置文件生成
     // 变量deploy检测配置文件是否存在
-
+    // 定义常量tick(Json格式)后转义为JavaScript对象traab
+    // try正常后直接继续运行 转义失败由catch函数抓错然后重置配置文件并输出
 	let deploy = file.exists('plugins/SADCSign/config.json');
 	if (deploy) {
 		try {
@@ -41,12 +37,16 @@ function read() {
 			traab = JSON.parse(tick);
 		}
 	}
+    //为flase值直接重置并创建再次读取配置文件
 	else {
 		setconfig()
 		tick = file.readFrom('plugins\\SADCSign\\config.json');
 		traab = JSON.parse(tick);
 	}
+    //判断配置文件的语言选项对应文件是否存在
 	if (file.exists('plugins/SADCSign/lang/' + traab["语言(language)"] + '.json')) {
+        //再 转 义
+        //下面同上
 		try {
 			langraw = file.readFrom('plugins/SADCSign/lang/' + traab["语言(language)"] + '.json');
 			lang = JSON.parse(langraw);
@@ -60,8 +60,49 @@ function read() {
 		lang = DefaultLang
 		setLang()
 	}
-	if (File.exists('plugins\\SADCSign\\mobs.json') == false) {
-		setconfig2()
-	}
 }
 read()
+//重置配置文件具体内容
+function setconfig() {
+	let dataccq = { "配置文件版本号": configVersion, "自动更新": true, "语言(language)": "zh_cn", "经济类型(请选择score或llmoney)": "score", "记分板名称": "money","货币名称": "金币"};
+	let datacaa = JSON.stringify(dataccq, null, "\t");
+	file.writeTo('plugins\\SADCSign\\config.json', datacaa);
+}
+
+function setLang() {
+	let rawlang = JSON.stringify(DefaultLang, null, "\t");
+	file.writeTo('plugins\\SADCSign\\lang\\zh_cn.json', rawlang);
+}
+//配置文件不对应立即重置最新版
+if (traab["配置文件版本号"] != configVersion) {
+	setconfig()
+	setTimeout(function () {
+		log(lang.Update_config.replace("{configVersion}", configVersion))
+	}, 8000)
+	read()
+}
+//自动更新模块（
+if (traab["自动更新"] == true) {
+	network.httpGet('https://gitee.com/sheepxray/SADCSign/raw/master/version.json', function (st, dat) {
+		if (st == 200) {
+			let version_lastest = JSON.parse(dat).version
+			if (version_lastest != Version) {
+				log(lang.Get_NewVersion.replace("{version_lastest}", version_lastest))
+				network.httpGet('https://gitee.com/sheepxray/SADCSign/raw/master/SADCSign.lxl.js', function (st2, dat2) {
+					if (st2 == 200) {
+						let plugin = dat2.replace(/\r/g, '');
+						file.writeTo("plugins/SADCSign.js", plugin)
+						log(lang.UpdatePlugin_Successful)
+						mc.runcmdEx("lxl reload SADCSign.js")
+					}
+					else {
+						log(lang.UpdatePlugin_Error)
+					}
+				})
+			}
+		}
+		else {
+			log(lang.Get_NewVersion_Error)
+		}
+	})
+}
