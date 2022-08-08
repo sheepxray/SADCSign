@@ -59,7 +59,7 @@ function read() {
 read()
 //重置配置文件具体内容
 function setconfig() {
-	let dataccq = {"是否开启插件":true "配置文件版本号": configVersion, "自动更新": true, "经济类型(请选择score或llmoney)": "score"};
+	let dataccq = {"是否开启插件":true,"配置文件版本号": configVersion, "自动更新": true, "经济类型(请选择score或llmoney)": "score"};
 	let datacaa = JSON.stringify(dataccq, null, "\t");
 	file.writeTo('plugins\\SADCSign\\config.json', datacaa);
 }
