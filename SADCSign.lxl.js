@@ -83,12 +83,12 @@ if (traab["配置文件版本号"] != configVersion) {
 }
 //自动更新模块（
 if (traab["自动更新"] == true) {
-	network.httpGet('https://gitee.com/sheepxray/SADCSign/raw/master/version.json', function (st, dat) {
+	network.httpGet('https://gitee.com/sheepxray/SADCSign/raw/main/version.json', function (st, dat) {
 		if (st == 200) {
 			let version_lastest = JSON.parse(dat).version
 			if (version_lastest != Version) {
 				log(lang.Get_NewVersion.replace("{version_lastest}", version_lastest))
-				network.httpGet('https://gitee.com/sheepxray/SADCSign/raw/master/SADCSign.lxl.js', function (st2, dat2) {
+				network.httpGet('https://gitee.com/sheepxray/SADCSign/raw/main/SADCSign.lxl.js', function (st2, dat2) {
 					if (st2 == 200) {
 						let plugin = dat2.replace(/\r/g, '');
 						file.writeTo("plugins/SADCSign.js", plugin)
@@ -106,3 +106,6 @@ if (traab["自动更新"] == true) {
 		}
 	})
 }
+//TODO:支持每日签到固定奖励编辑
+//TODO:周一到周日可以自定义
+//TODO:游戏内配置签到获取内容
