@@ -1,6 +1,5 @@
 //LiteXLoader Dev Helper
-//<reference path="c:\/Library/JS/Api.js" /> 
-
+/// <reference path="c:\/Library/JS/Api.js" /> 
 //核心文件与配置文件版本 
 var Version = "v1.0"
 var configVersion = "v1.0"
@@ -44,22 +43,6 @@ function read() {
 		traab = JSON.parse(tick);
 	}
     //判断配置文件的语言选项对应文件是否存在
-	if (file.exists('plugins/SADCSign/lang/' + traab["语言(language)"] + '.json')) {
-        //再 转 义
-        //下面同上
-		try {
-			langraw = file.readFrom('plugins/SADCSign/lang/' + traab["语言(language)"] + '.json');
-			lang = JSON.parse(langraw);
-		}
-		catch(err){
-			log("读取语言文件出错！")
-			lang = DefaultLang.Lang_Error
-		}
-	}
-	else {
-		lang = DefaultLang
-		setLang()
-	}
 	let rewardtest = file.exists('plugins/SADCSign/reward.json');
 	if(rewardtest){
 		try{
@@ -76,7 +59,7 @@ function read() {
 read()
 //重置配置文件具体内容
 function setconfig() {
-	let dataccq = { "配置文件版本号": configVersion, "自动更新": true, "语言(language)": "zh_cn", "经济类型(请选择score或llmoney)": "score", "记分板名称": "money","货币名称": "金币"};
+	let dataccq = {"是否开启插件":true "配置文件版本号": configVersion, "自动更新": true, "经济类型(请选择score或llmoney)": "score"};
 	let datacaa = JSON.stringify(dataccq, null, "\t");
 	file.writeTo('plugins\\SADCSign\\config.json', datacaa);
 }
@@ -84,10 +67,6 @@ function setReward() {
 	let rewardA = { "周一":114514 };
 	let rewardB = JSON.stringify(rewardA,null,"\t");
 	file.writeTo('plugins\\SADCSign\\reward.json', rewardB);
-}
-function setLang() {
-	let rawlang = JSON.stringify(DefaultLang, null, "\t");
-	file.writeTo('plugins\\SADCSign\\lang\\zh_cn.json', rawlang);
 }
 //配置文件不对应立即重置最新版
 if (traab["配置文件版本号"] != configVersion) {
@@ -125,3 +104,13 @@ if (traab["自动更新"] == true) {
 //TODO:支持每日签到固定奖励编辑
 //TODO:周一到周日可以自定义
 //TODO:游戏内配置签到获取内容
+
+//登陆主逻辑
+function signol(pl){
+	datacaa.reload()
+	var tm = system.getTimeObj()
+    var date = tm.Y + "-" + tm.M + "-" + tm.D
+	var mainOFFON = traab.get("是否开启插件")
+
+
+}
