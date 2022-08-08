@@ -68,7 +68,11 @@ function setconfig() {
 	let datacaa = JSON.stringify(dataccq, null, "\t");
 	file.writeTo('plugins\\SADCSign\\config.json', datacaa);
 }
-
+function setReward() {
+	let rewardA = { "周一":114514 };
+	let rewardB = JSON.stringify(rewardA,null,"\t");
+	file.writeTo('plugins\\SADCSign\\reward.json', rewardB);
+}
 function setLang() {
 	let rawlang = JSON.stringify(DefaultLang, null, "\t");
 	file.writeTo('plugins\\SADCSign\\lang\\zh_cn.json', rawlang);
