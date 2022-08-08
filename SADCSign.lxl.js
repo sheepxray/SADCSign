@@ -8,7 +8,6 @@ var configVersion = "v1.0"
 let DefaultLang = {
 	"Lang_Error": "读取语言文件出错！",
 	"Config_Error": "您的config.json配置异常，已重置",
-	"Config_Error_2": "您的mobs.json配置异常，已重置",
 	"Update_config": "检测到配置文件非{configVersion}的版本，已重置配置项",
 	"Get_NewVersion": "获取到云端版本{version_lastest}，正在更新...",
 	"Get_NewVersion_Error": "获取最新版本异常",
@@ -16,6 +15,7 @@ let DefaultLang = {
 	"UpdatePlugin_Error": "自动更新异常",
 	"Debug_Open": "§b[SADCSign]您打开了此功能",
 	"Debug_Close": "§b[SADCSign]您关闭了此功能",
+	"Reward_Error":"reward.json读取异常，已重置"
 }
 //配置文件目录生成
 function read() {
@@ -53,13 +53,25 @@ function read() {
 		}
 		catch(err){
 			log("读取语言文件出错！")
-			lang = DefaultLang
+			lang = DefaultLang.Lang_Error
 		}
 	}
 	else {
 		lang = DefaultLang
 		setLang()
 	}
+	let rewardtest = file.exists('plugins/SADCSign/reward.json');
+	if(rewardtest){
+		try{
+			rewardtestA = file.readFrom('plugins\\SADCSign\\reward.json');
+			rewardtestB = JSON.parse(rewardtestA);
+		}
+		catch(err){
+			log("读取语言文件出错！")
+			lang = DefaultLang
+		}
+	}
+
 }
 read()
 //重置配置文件具体内容
