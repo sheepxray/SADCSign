@@ -83,7 +83,7 @@ if (traab["配置文件版本号"] != configVersion) {
 }
 //自动更新模块（
 if (traab["自动更新"] == true) {
-	network.httpGet('https://gitee.com/sheepxray/SADCSign/raw/main/version.json', function (st, dat) {
+	network.httpGet('https://gitee.com/sheepxray/SADCSign/raw/main/Version.json', function (st, dat) {
 		if (st == 200) {
 			let version_lastest = JSON.parse(dat).version
 			if (version_lastest != Version) {
